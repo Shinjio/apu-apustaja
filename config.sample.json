@@ -1,0 +1,26 @@
+{
+	"type": "bot",
+
+	"token": "Your Bot's Token",
+
+	"owner": yourIDmustbeINT,
+
+	"extensions": [
+		{
+			"name" : "addons.service"
+		},
+		{
+			"name" : "addons.utils"
+		},
+		{
+			"name" : "addons.mod"
+		},
+		{
+			"name" : "addons.general"
+		},
+		{
+			"name" : "addons.serverarchive"
+		}
+	]
+}
+
