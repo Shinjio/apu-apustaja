@@ -46,6 +46,10 @@ class General(commands.Cog):
         except:
             await ctx.message.channel.send("Exceptionnigga")
 
+    @commands.command()
+    async def sourcecode(self, ctx):
+        """ - Bot's source code repository"""
+        await ctx.message.channel.send("https://github.com/Shinjio/apu-apustaja")
 
 def setup(bot):
     bot.add_cog(General(bot))
