@@ -1,0 +1,5 @@
+config.json
+requirements.txt
+guild_archives/
+Procfile
+main.db
