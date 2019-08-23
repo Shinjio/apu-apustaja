@@ -6,6 +6,7 @@ import sys
 import json
 import sqlite3
 import discord
+import psutil
 import random
 import asyncio
 from addons.lists import copypasta
@@ -41,11 +42,11 @@ bot.db.commit()
 bot.access_roles = {} #roles
 bot.unmute_timers = {} #mutes
 bot.server_settings = {} #per server settings
-
+bot.process = psutil.Process()
 
 @bot.event
 async def on_ready():
-    bot.start_time = datetime.today()
+    bot.start_time = datetime.utcnow()
 
     print("{} has started!".format(bot.user.name))
     print("Current time is {}".format(bot.start_time))
@@ -82,7 +83,7 @@ async def on_ready():
     print("\n\nAddons loaded successfully.\n\n")
     await bot.change_presence(activity=discord.Game(name='Hello frens | apu help'))
 
-    #Send a random message from copypasta.copypasta to my friends' server.
+    #Send a random message from copypasta.copypasta to my friends'
     while True:
         channel = bot.get_channel(544990818562342922)
         delay = random.randint(60, 3600)

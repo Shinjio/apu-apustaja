@@ -3,6 +3,8 @@ import asyncio
 import time
 import math
 import random
+import datetime
+import psutil
 from discord.ext import commands
 
 
@@ -52,6 +54,51 @@ class General(commands.Cog):
         """ - Bot's source code repository"""
         await ctx.message.channel.send("https://github.com/Shinjio/apu-apustaja")
     
+    @commands.command(aliases=['bot', 'info'])
+    async def about(self, ctx):
+        """ - Display informations about apu bot and latest changes."""
+        value = random.randint(0, 0xffffff)
+
+        embed = discord.Embed()
+        embed.colour = discord.Colour.blue()
+        embed.set_author(name='apu-apustaja.py', icon_url=ctx.author.avatar_url)
+        total_members = sum(1 for _ in self.bot.get_all_members())
+        total_online = len({m.id for m in self.bot.get_all_members() if m.status is discord.Status.online})
+        total_unique = len(self.bot.users)
+
+        text = len(text_channels)
+        voice = len(voice_channels)
+        dm = len(self.bot.private_channels)
+
+        #broken, must be fixed
+        #now = datetime.datetime.utcnow()
+        #delta = now - self.bot.start_time
+        #hours, remainder = divmod(int(delta.total_seconds()), 3600)
+        #minutes, seconds = divmod(remainder, 60)
+        #days, hours = divmod(hours, 24)
+        #fmt = '{h}h {m}m {s}s'
+        #if days:
+        #    fmt = '{d} ' + fmt
+        #uptime = fmt.format(h=hours, m=minutes, s=seconds)
+
+        github = '[Click here] (https://github.com/Shinjio/apu-apustaja)'
+        server = '[Click here] (https://discord.gg/Mse6VRD)'
+
+        memory_usage = self.bot.process.memory_full_info().uss / 1024**2
+        cpu_usage = self.bot.process.cpu_percent() / psutil.cpu_count()
+
+        embed.add_field(name='Author', value='MoonMan#9290', inline=False)
+        embed.add_field(name='Guilds', value=len(self.bot.guilds), inline=False)
+        embed.add_field(name='Members', value=f'{total_unique} total\n{total_online} online', inline=False)
+        embed.add_field(name='Process', value=f'{memory_usage:.2f} MiB\n{cpu_usage:.2f}% CPU', inline=False)
+        embed.add_field(name='Github', value=github, inline=False)
+        embed.add_field(name='Discord', value=server, inline=False)
+        embed.set_footer(text=f'Powered by discord.py {discord.__version__}')
+
+        await ctx.send(embed=embed)
+
+
+
     #TODO
 
     #@commands.command(aliases=['calc', 'maths', 'math'])
