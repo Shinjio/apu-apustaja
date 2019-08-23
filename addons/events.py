@@ -18,7 +18,7 @@ class Events(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.author.id == 329410106523648002:
+        if msg.author.id == 329410106523648002 or msg.author.id == 479979609757188096:
             await msg.channel.send("Zitto magrebino.")
             return
 
