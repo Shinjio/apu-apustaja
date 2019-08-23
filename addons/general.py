@@ -49,11 +49,6 @@ class General(commands.Cog):
         except:
             await ctx.message.channel.send("Exceptionnigga")
 
-    @commands.command()
-    async def sourcecode(self, ctx):
-        """ - Bot's source code repository"""
-        await ctx.message.channel.send("https://github.com/Shinjio/apu-apustaja")
-    
     @commands.command(aliases=['bot', 'info'])
     async def about(self, ctx):
         """ - Display informations about apu bot and latest changes."""
