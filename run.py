@@ -82,6 +82,7 @@ async def on_ready():
     print("\n\nAddons loaded successfully.\n\n")
     await bot.change_presence(activity=discord.Game(name='Hello frens | apu help'))
 
+    #Send a random message from copypasta.copypasta to my friends' server.
     while True:
         channel = bot.get_channel(544990818562342922)
         delay = random.randint(60, 3600)
