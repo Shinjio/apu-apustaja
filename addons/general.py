@@ -53,7 +53,7 @@ class General(commands.Cog):
         await ctx.message.channel.send("https://github.com/Shinjio/apu-apustaja")
     
     #TODO
-    
+
     #@commands.command(aliases=['calc', 'maths', 'math'])
     #async def calculate(self, ctx, *, formula=None):
     #    """
@@ -81,6 +81,7 @@ class General(commands.Cog):
     #        e.color = await ctx.get_dominant_color(user.avatar_url)
     #        e.description = f'\u200B{msg}'
 
+    
 
 
 def setup(bot):

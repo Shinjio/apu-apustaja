@@ -6,7 +6,9 @@ import sys
 import json
 import sqlite3
 import discord
+import random
 import asyncio
+from addons.lists import copypasta
 from datetime import datetime
 from discord.ext import commands
 
@@ -16,6 +18,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__)) #Set working directory to
 os.chdir(dir_path) #Move to bot's folder
 prefixes = commands.when_mentioned_or('apu ') #Set prefix
 bot = commands.Bot(command_prefix=prefixes, description=description, pm_help=None)
+#client = discord.Client()
 
 
 #Read config
@@ -79,8 +82,16 @@ async def on_ready():
     print("\n\nAddons loaded successfully.\n\n")
     await bot.change_presence(activity=discord.Game(name='Hello frens | apu help'))
 
+    while True:
+        channel = bot.get_channel(544990818562342922)
+        delay = random.randint(60, 3600)
+        await asyncio.sleep(delay)
+        await channel.send(random.choice(copypasta.copypasta))
+        
+
 
 if bot.config['type'] == "user":
     bot.run(bot.config['user_token'], bot=False)
 else:
     bot.run(bot.config['token'])
+
