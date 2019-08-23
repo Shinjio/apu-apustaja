@@ -52,8 +52,7 @@ class General(commands.Cog):
     @commands.command(aliases=['bot', 'info'])
     async def about(self, ctx):
         """ - Display informations about apu bot and latest changes."""
-        value = random.randint(0, 0xffffff)
-
+        
         embed = discord.Embed()
         embed.colour = discord.Colour.blue()
         embed.set_author(name='apu-apustaja.py', icon_url=ctx.author.avatar_url)
@@ -87,6 +86,18 @@ class General(commands.Cog):
         embed.set_footer(text=f'Powered by discord.py {discord.__version__}')
 
         await ctx.send(embed=embed)
+    
+    @commands.command(aliases=['av'])
+    async def avatar(self, ctx, *, member : discord.Member=None):
+        """ - Return someone's avatar url"""
+        av = member.avatar_url
+        em = discord.Embed(description='requested by:\n{0}'.format(ctx.author))
+        em.set_image(url=av)
+
+        try:
+            await ctx.send(embed=em)
+        except Exception as e:
+            await ctx.send(str(e))
 
 
 
