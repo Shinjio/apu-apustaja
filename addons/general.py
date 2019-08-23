@@ -61,10 +61,6 @@ class General(commands.Cog):
         total_online = len({m.id for m in self.bot.get_all_members() if m.status is discord.Status.online})
         total_unique = len(self.bot.users)
 
-        text = len(text_channels)
-        voice = len(voice_channels)
-        dm = len(self.bot.private_channels)
-
         #broken, must be fixed
         #now = datetime.datetime.utcnow()
         #delta = now - self.bot.start_time
