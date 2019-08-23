@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import time
+import math
 import random
 from discord.ext import commands
 
@@ -50,6 +51,37 @@ class General(commands.Cog):
     async def sourcecode(self, ctx):
         """ - Bot's source code repository"""
         await ctx.message.channel.send("https://github.com/Shinjio/apu-apustaja")
+    
+    #TODO
+    
+    #@commands.command(aliases=['calc', 'maths', 'math'])
+    #async def calculate(self, ctx, *, formula=None):
+    #    """
+    #    Do some real fucking math.
+    #    """
+    #    
+    #    author = ctx.message.author
+    #    user = ctx.author
+
+    #    if formula == None:
+    #        #No fucking math reeeeeeeeeee
+    #        msg = f'\u200BUsage: `{ctx.prefix}{ctx.invoked_with} [any maths formula]`'
+    #        e = discord.Embed()
+    #        e.color = await ctx.get_dominant_color(user.avar_url)
+    #        e.description = f'{msg}'
+    #        await ctx.send(embed=e)
+    #        return
+    #    
+    #    try:
+    #        answer = self.nsp.eval(formula)
+    #    except:
+    #        #messed up input? examples.
+    #        msg = f'\N{THINKING FACE} wrong {formula} input.\nTry any of these:'
+    #        e = discord.Embed()
+    #        e.color = await ctx.get_dominant_color(user.avatar_url)
+    #        e.description = f'\u200B{msg}'
+
+
 
 def setup(bot):
     bot.add_cog(General(bot))
