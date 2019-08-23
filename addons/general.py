@@ -5,8 +5,94 @@ import math
 import random
 import datetime
 import psutil
+import operator
+from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional, ZeroOrMore, Forward, nums, alphas, oneOf)
 from addons.utils import imageLookup
 from discord.ext import commands
+
+
+class NumericStringParserForPython3(object):
+    def pushFirst(self, strg, loc, toks):
+        self.exprStack.append(toks[0])
+    def pushUMinus(self, strg, loc, toks):
+        if toks and toks[0] == '-':
+            self.exprStack.append('unary -')
+
+    def __init__(self):
+        """
+        Need it for the math dawg
+        
+        expop   :: '^'
+        multop  :: '*' || '/'
+        addop   :: '+' || '-'
+        integer :: ['+' || '-'] '0'..'9'+
+        """
+        point = Literal(".")
+        e = CaselessLiteral("E")
+        pi = CaselessLiteral("PI")
+        fnumber = Combine(Word("+-"+nums, nums) +
+                          Optional(point + Optional(Word(nums))) +
+                          Optional(e + Word("+-"+nums, nums)))
+        ident = Word(alphas, alphas+nums+"_$")
+        plus = Literal("+")
+        minus = Literal("-")
+        mult = Literal("*")
+        div = Literal("/")
+        lpar = Literal("(").suppress()
+        rpar = Literal(")").suppress()
+        addop = plus | minus
+        multop = mult | div
+        expop = Literal("^")
+        expr = Forward()
+        atom = ((Optional(oneOf("- +")) + (pi | e | fnumber |ident + lpar + expr + rpar).setParseAction(self.pushFirst)) | Optional(oneOf("- +")) + Group(lpar + expr + rpar)).setParseAction(self.pushUMinus)
+        factor = Forward()
+        factor << atom + ZeroOrMore((expop + factor).setParseAction(self.pushFirst))
+        term = factor + ZeroOrMore((multop + factor).setParseAction(self.pushFirst))
+        expr << term + ZeroOrMore((addop + term).setParseAction(self.pushFirst))
+
+        self.bnf = expr
+        epsilon = 1e-12
+        self.opn = {
+                "+" : operator.add,
+                "-" : operator.sub,
+                "*" : operator.mul,
+                "/" : operator.truediv,
+                "^" : operator.pow }
+
+        self.fn = {
+                "sin" : math.sin,
+                "cos" : math.cos,
+                "tan" : math.tan,
+                "abs" : abs,
+                "trunc" : lambda a: int(a),
+                "round" : round,
+                "sgn" : lambda a: abs(a)>epsilon and cmp(a,0) or 0}
+        
+    
+    def evaluateStack(self, s):
+        op = s.pop()
+        if op == 'unary -':
+            return -self.evaluateStack(s)
+        if op in "+-*/^":
+            op2 = self.evaluateStack(s)
+            op1 = self.evaluateStack(s)
+            return self.opn[op](op1, op2)
+        elif op == "PI":
+            return math.pi # 3.1415926535, if i remember right
+        elif op == "E":
+            return math.e  # 2.718281828, if i remember right
+        elif op in self.fn:
+            return self.fn[op](self.evaluateStack(s))
+        elif op[0].isalpha():
+            return 0
+        else:
+            return float(op)
+
+    def evalu(self, num_string, parseAll=True):
+        self.exprStack = []
+        results=self.bnf.parseString(num_string, parseAll)
+        val = self.evaluateStack(self.exprStack[:])
+        return val
 
 
 class General(commands.Cog):
@@ -17,6 +103,7 @@ class General(commands.Cog):
     #Construct
     def __init__(self, bot):
         self.bot = bot
+        self.nsp = NumericStringParserForPython3()
         print('Addon "{}" loaded'.format(self.__class__.__name__))
     
     @commands.command()
@@ -73,7 +160,7 @@ class General(commands.Cog):
         #uptime = fmt.format(h=hours, m=minutes, s=seconds)
 
         github = '[Click here] (https://github.com/Shinjio/apu-apustaja)'
-        server = '[Click here] (https://discord.gg/Mse6VRD)'
+        #server = '[Click here] (https://discord.gg/Mse6VRD)'
 
         memory_usage = self.bot.process.memory_full_info().uss / 1024**2
         cpu_usage = self.bot.process.cpu_percent() / psutil.cpu_count()
@@ -83,7 +170,7 @@ class General(commands.Cog):
         embed.add_field(name='Members', value=f'{total_unique} total\n{total_online} online', inline=False)
         embed.add_field(name='Process', value=f'{memory_usage:.2f} MiB\n{cpu_usage:.2f}% CPU', inline=False)
         embed.add_field(name='Github', value=github, inline=False)
-        embed.add_field(name='Discord', value=server, inline=False)
+        #embed.add_field(name='Discord', value=server, inline=False)
         embed.set_footer(text=f'Powered by discord.py {discord.__version__}')
 
         await ctx.send(embed=embed)
@@ -109,34 +196,50 @@ class General(commands.Cog):
     #    #except Exception as e:
     #    #    await ctx.send(str(e))
 
+    
     #TODO
 
-    #@commands.command(aliases=['calc', 'maths', 'math'])
-    #async def calculate(self, ctx, *, formula=None):
-    #    """
-    #    Do some real fucking math.
-    #    """
-    #    
-    #    author = ctx.message.author
-    #    user = ctx.author
+    @commands.command(aliases=['calc', 'maths', 'math'])
+    async def calculate(self, ctx, *, formula=None):
+        """
+        Do some real fucking math.
+        """
+        
+        author = ctx.message.author
+        user = ctx.author
 
-    #    if formula == None:
-    #        #No fucking math reeeeeeeeeee
-    #        msg = f'\u200BUsage: `{ctx.prefix}{ctx.invoked_with} [any maths formula]`'
-    #        e = discord.Embed()
-    #        e.color = await ctx.get_dominant_color(user.avar_url)
-    #        e.description = f'{msg}'
-    #        await ctx.send(embed=e)
-    #        return
-    #    
-    #    try:
-    #        answer = self.nsp.eval(formula)
-    #    except:
-    #        #messed up input? examples.
-    #        msg = f'\N{THINKING FACE} wrong {formula} input.\nTry any of these:'
-    #        e = discord.Embed()
-    #        e.color = await ctx.get_dominant_color(user.avatar_url)
-    #        e.description = f'\u200B{msg}'
+        if formula == None:
+            #No fucking math reeeeeeeeeee
+            msg = f'\u200BUsage: `{ctx.prefix}{ctx.invoked_with} [any maths formula]`'
+            e = discord.Embed()
+            e.color = discord.Colour.red()
+            e.description = f'{msg}'
+            await ctx.send(embed=e)
+            return
+        
+        try:
+            answer = self.nsp.evalu(formula)
+        except:
+            #messed up input? examples.
+            msg = f'\N{THINKING FACE} wrong {formula} input.\nTry any of these:'
+            e = discord.Embed()
+            e.color = discord.Colour.red()
+            e.description = f'\u200B{msg}'
+            e.add_field(name='multiplication', value="`num` * `num`", inline=False)
+            e.add_field(name='division', value="`num` / `num`", inline=False)
+            e.add_field(name='addition', value="`num` + `num`", inline=False)
+            e.add_field(name='rest', value="`num` - `num`", inline=False)
+            e.add_field(name='exponential', value="`num` ^ `num`", inline=False)
+            await ctx.send(embed=e, delete_after=60)
+            return
+        
+        #Correct input prints correct answer
+        e = discord.Embed()
+        e.color = discord.Colour.red()
+        e.add_field(name='Input:', value=f'```{formula}```', inline=False)
+        e.add_field(name='Result:', value=f'```{round(answer, 2)}```', inline=False)
+        await ctx.send(embed=e)
+
 
     
 
