@@ -1,4 +1,8 @@
 import sqlite3
+import urllib
+import re
+from http.cookiejar import CookieJar
+from urllib.request import urlopen
 from discord.ext import commands
 from discord.ext.commands import MemberConverter
 
@@ -99,6 +103,16 @@ async def get_members(bot, msg, name : str, ctx):
                         return None
                     else:
                         return members
+
+#for reverse function
+async def imageLookup(path):
+    cj = CookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+    opener.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17')]
+    googlepath = 'https://images.google.com/searchbyimage?image_url=' + path
+    source = opener.open(googlepath).read()
+    findlinks = re.findall(r'<div class ="rg_meta">{"os":".*?","cb":.*?,"ou":"(.*?)","rh":"',source.decode())
+    return findlinks
 
 #Cog
 class Utils(commands.Cog):

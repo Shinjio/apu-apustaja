@@ -5,6 +5,7 @@ import math
 import random
 import datetime
 import psutil
+from addons.utils import imageLookup
 from discord.ext import commands
 
 
@@ -99,7 +100,14 @@ class General(commands.Cog):
         except Exception as e:
             await ctx.send(str(e))
 
-
+    #@commands.command()
+    #async def reverse(self, ctx):
+    #    #try:
+    #    image = await imageLookup(ctx.message.attachments[0].url)
+    #    print(image)
+    #    #await ctx.send(image)
+    #    #except Exception as e:
+    #    #    await ctx.send(str(e))
 
     #TODO
 
