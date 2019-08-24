@@ -5,7 +5,6 @@ import time
 import math
 import random
 import datetime
-import urbanasync
 import psutil
 import operator
 from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional, ZeroOrMore, Forward, nums, alphas, oneOf)
