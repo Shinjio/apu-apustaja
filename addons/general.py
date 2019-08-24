@@ -9,6 +9,8 @@ import operator
 from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional, ZeroOrMore, Forward, nums, alphas, oneOf)
 from addons.utils import imageLookup
 from discord.ext import commands
+from sympy import solve
+from ext.utilities import parse_equation
 
 
 class NumericStringParserForPython3(object):
@@ -197,8 +199,7 @@ class General(commands.Cog):
     #    #    await ctx.send(str(e))
 
     
-    #TODO
-
+    #To improve maybe
     @commands.command(aliases=['calc', 'maths', 'math'])
     async def calculate(self, ctx, *, formula=None):
         """
@@ -240,8 +241,16 @@ class General(commands.Cog):
         e.add_field(name='Result:', value=f'```{round(answer, 2)}```', inline=False)
         await ctx.send(embed=e)
 
-
-    
+    @commands.command()
+    async def algebra(self, ctx, *, equation):
+        eq = parse_equation(equation)
+        result = solve(eq)
+        e = discord.Embed()
+        e.color = discord.Color.green()
+        e.title = 'Equation'
+        e.description = f'```py\n{equation} = 0```'
+        e.add_field(name='Result', value=f'```py\n{result}```')
+        await ctx.send(embed=e)
 
 
 def setup(bot):
