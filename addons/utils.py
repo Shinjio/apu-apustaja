@@ -1,6 +1,8 @@
 import sqlite3
 import urllib
 import re
+import requests
+import json
 from http.cookiejar import CookieJar
 from urllib.request import urlopen
 from discord.ext import commands
@@ -113,6 +115,37 @@ async def imageLookup(path):
     source = opener.open(googlepath).read()
     findlinks = re.findall(r'<div class ="rg_meta">{"os":".*?","cb":.*?,"ou":"(.*?)","rh":"',source.decode())
     return findlinks
+
+"""URBANDICTIONARY API"""
+API_BASE = 'http://api.urbandictionary.com/v0/'
+
+def urban_define(term):
+    """Define `term`"""
+    try:
+        res = requests.get(API_BASE + 'define', params={'term':term}).json()
+    except:
+        return None
+
+    #if res['list'] == []:
+    #    return None
+
+    return {
+        'definitions' : [urban_parse_definition(item) for item in res['list']]
+    }
+
+def urban_parse_definition(item):
+    return {
+        'id' : item['defid'],
+        'term' : item['word'],
+        'definition' : item['definition'],
+        'author' : item['author'],
+        'up' : item['thumbs_up'],
+        'down' : item['thumbs_down'],
+        'score' : item['thumbs_up'] - item['thumbs_down'],
+        'link' : item['permalink']
+    }
+"""END OF API"""
+
 
 #Cog
 class Utils(commands.Cog):

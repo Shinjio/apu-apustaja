@@ -1,13 +1,15 @@
 import discord
 import asyncio
+import aiohttp
 import time
 import math
 import random
 import datetime
+import urbanasync
 import psutil
 import operator
 from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional, ZeroOrMore, Forward, nums, alphas, oneOf)
-from addons.utils import imageLookup
+from addons.utils import imageLookup, urban_define, urban_parse_definition
 from discord.ext import commands
 from sympy import solve
 from ext.utilities import parse_equation
@@ -241,10 +243,13 @@ class General(commands.Cog):
         e.add_field(name='Result:', value=f'```{round(answer, 2)}```', inline=False)
         await ctx.send(embed=e)
 
+    #TODO
     @commands.command()
     async def algebra(self, ctx, *, equation):
-        eq = parse_equation(equation)
-        result = solve(eq)
+        parsed = parse_equation(equation)
+        eq = parsed[0]
+        alpha = parsed[1]
+        result = solve(eq, alpha)
         e = discord.Embed()
         e.color = discord.Color.green()
         e.title = 'Equation'
@@ -252,6 +257,29 @@ class General(commands.Cog):
         e.add_field(name='Result', value=f'```py\n{result}```')
         await ctx.send(embed=e)
 
+    @commands.command()
+    async def urban(self, ctx, *, search_term : str):
+        """ - Searches up a term in urban dictionary """
+
+        e = discord.Embed()
+
+        try:
+            defined = urban_define(search_term)
+
+            if defined:
+                defn = defined['definitions'][0]
+                owo = ('{i}: {defn}'.format(i=1, defn=defn['definition']))
+            else:
+                owo = 'Search term not found, fren :('
+        except Exception as e:
+            e.title = str(e)
+            return await ctx.send(e)
+        
+        e.color = discord.Colour.blurple()
+        e.title = f"{search_term} means..\n"
+        e.description = owo
+        await ctx.send(embed=e)
+        
 
 def setup(bot):
     bot.add_cog(General(bot))
