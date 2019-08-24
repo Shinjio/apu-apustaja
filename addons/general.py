@@ -168,7 +168,7 @@ class General(commands.Cog):
         memory_usage = self.bot.process.memory_full_info().uss / 1024**2
         cpu_usage = self.bot.process.cpu_percent() / psutil.cpu_count()
 
-        embed.add_field(name='Author', value='MoonMan#9290', inline=False)
+        embed.add_field(name='Author', value='Kurisu#9290', inline=False)
         embed.add_field(name='Guilds', value=len(self.bot.guilds), inline=False)
         embed.add_field(name='Members', value=f'{total_unique} total\n{total_online} online', inline=False)
         embed.add_field(name='Process', value=f'{memory_usage:.2f} MiB\n{cpu_usage:.2f}% CPU', inline=False)
