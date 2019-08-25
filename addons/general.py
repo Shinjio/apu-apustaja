@@ -264,7 +264,7 @@ class General(commands.Cog):
 
     #To improve
     @commands.command()
-    async def urban(self, ctx, *, search_term : str):
+    async def urban(self, ctx, search_term : str, n : int = 1):
         """ - Searches up a term in urban dictionary """
 
         e = discord.Embed()
@@ -273,19 +273,21 @@ class General(commands.Cog):
             defined = urban_define(search_term)
 
             if defined:
-                defn = defined['definitions'][0]
-                owo = ('{i}: {defn}'.format(i=1, defn=defn['definition']))
-            else:
-                owo = 'Search term not found, fren :('
-        except Exception as e:
-            #e.title = str(e)
-            #return await ctx.send(e)
-            return await ctx.send('Search term not found, fren :(')
-        
-        e.color = discord.Colour.blurple()
-        e.title = f"{search_term} means..\n"
-        e.description = owo
-        await ctx.send(embed=e)
+                defn = defined['definitions'][n -1]
+                owo = ('{i}: {defn}'.format(i=n, defn=defn['definition']))
+
+            e.color = discord.Colour.blurple()
+            e.title = f"{search_term} means..\n"
+            e.description = owo
+            await ctx.send(embed=e)
+
+        except:
+            e.color = discord.Colour.red()
+            e.title = "Error."
+            owo = "Term not found, fren :("
+            e.description = owo
+            await ctx.send(embed=e)
+            return
         
 
 def setup(bot):
