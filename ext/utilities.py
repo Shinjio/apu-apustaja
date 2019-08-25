@@ -25,17 +25,3 @@ def parse_equation(equation):
                         continue
             to_parse += char
     return (to_parse, chars)
-    
-
-
-#for debugging
-
-#equation = "4x + x - 6 - 19"
-equation = "x + y -2x + 3"
-parsed = parse_equation(equation)
-eq = parsed[0] 
-symbols = parsed[1]
-solved = solve(eq, symbols)
-print(solved)
-#x = Symbol('x')
-#solve(4 * x + x - 6, 19)

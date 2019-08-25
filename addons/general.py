@@ -242,20 +242,27 @@ class General(commands.Cog):
         e.add_field(name='Result:', value=f'```{round(answer, 2)}```', inline=False)
         await ctx.send(embed=e)
 
-    #TODO
+    #To improve
     @commands.command()
     async def algebra(self, ctx, *, equation):
-        parsed = parse_equation(equation)
-        eq = parsed[0]
-        alpha = parsed[1]
-        result = solve(eq, alpha)
         e = discord.Embed()
-        e.color = discord.Color.green()
-        e.title = 'Equation'
-        e.description = f'```py\n{equation} = 0```'
-        e.add_field(name='Result', value=f'```py\n{result}```')
-        await ctx.send(embed=e)
+        try:
+            parsed = parse_equation(equation)
+            eq = parsed[0]
+            alpha = parsed[1]
+            result = solve(eq, alpha)
+            e.color = discord.Color.green()
+            e.title = 'Equation'
+            e.description = f'```py\n{equation} = 0```'
+            e.add_field(name='Result', value=f'```py\n{result}```')
+            await ctx.send(embed=e)
+        except:
+            e.color = discord.Color.green()
+            e.title = 'Error'
+            e.description = "Your expression must be equal to zero, fren"
+            await ctx.send(embed=e)
 
+    #To improve
     @commands.command()
     async def urban(self, ctx, *, search_term : str):
         """ - Searches up a term in urban dictionary """
@@ -271,8 +278,9 @@ class General(commands.Cog):
             else:
                 owo = 'Search term not found, fren :('
         except Exception as e:
-            e.title = str(e)
-            return await ctx.send(e)
+            #e.title = str(e)
+            #return await ctx.send(e)
+            return await ctx.send('Search term not found, fren :(')
         
         e.color = discord.Colour.blurple()
         e.title = f"{search_term} means..\n"
