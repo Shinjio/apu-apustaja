@@ -8,6 +8,15 @@ from urllib.request import urlopen
 from discord.ext import commands
 from discord.ext.commands import MemberConverter
 
+
+class Help(commands.DefaultHelpCommand):
+    """
+    Custom help command
+    """
+    def __init__(self):
+        pass
+
+
 #These methods are static since they're used in different addons
 async def db_check(bot, msg, cursor, table : str):
     """

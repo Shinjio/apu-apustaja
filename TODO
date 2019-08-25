@@ -1,4 +1,8 @@
+MUSIC
+
 improve algebra function
 add feedback function
+add help command
 add logging system
 improve console's output and logging in general
+handle commands not found

@@ -108,14 +108,14 @@ class Service(commands.Cog):
 
     @roles.command(name="add")
     @checks.is_access_allowed(required_level=3)
-    async def roles_add(self, ctx, name : str, level : int):
+    async def roles_add(self, ctx, id : int, level : int):
         """ - Add role"""
         cursor = self.bot.db.cursor()
 
         if not await utils.db_check(self.bot, ctx.message, cursor, "roles"):
             return
 
-        role = discord.get(ctx.message.guild.roles, name=name)
+        role = discord.get(ctx.message.guild.roles, id=id)
 
         if role is None:
             print("Role wasn't found")
