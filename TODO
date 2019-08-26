@@ -1,9 +1,7 @@
-MUSIC
-
 add a feedback command
 improve algebra function
 add feedback function
-add help command
+improve help command
 add logging system
 improve console's output and logging in general
 handle commands not found
