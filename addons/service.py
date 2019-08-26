@@ -86,9 +86,9 @@ class Service(commands.Cog):
             await ctx.message.channel.send(msg)
     
     @roles.command(name="list")
-    @checks.is_access_allowed(required_level=3)
+    @checks.is_access_allowed(required_level=2)
     async def roles_list(self, ctx):
-        """ - Returns roles list for this server (Level 3)"""
+        """ - Returns roles list for this server (Level 2)"""
         cursor = self.bot.db.cursor()
         
         if not await utils.db_check(self.bot, ctx.message, cursor, "roles"):
@@ -131,7 +131,7 @@ class Service(commands.Cog):
             db.execute(query, record)
             db.commit()
             #Add role
-            self.bot.access_roles[ctx.message.guild.id].update({role.id : level})
+            self.bot.access_roles[ctx.message.guild.id].update({id : level})
             await ctx.message.channel.send("Your record has been successfully added, fren")
         except sqlite3.Error as e:
             await ctx.message.channel.send("Failed to add new record, fren :(\n"
@@ -139,14 +139,14 @@ class Service(commands.Cog):
     
     @roles.command(name="rm")
     @checks.is_access_allowed(required_level=3)
-    async def roles_remove(self, ctx, name : str):
+    async def roles_remove(self, ctx, id : int):
         """ - Remove role"""
         cursor = self.bot.db.cursor()
 
         if not await utils.db_check(self.bot, ctx, cursor, "roles"):
             return
 
-        role = discord.get(ctx.message.guild.roles, name=name)
+        role = discord.get(ctx.message.guild.roles, id=id)
 
         if role is None:
             print("Role wasn't found")
@@ -197,7 +197,7 @@ class Service(commands.Cog):
             await ctx.message.channel.send("Failed to initialize db, fren :(")
     
     @db.command(name="add")
-    @checks.is_access_allowed(required_level=3)
+    @checks.is_access_allowed(required_level=9000)
     async def db_add(self, ctx, table : str, name : str, content : str):
         """ - Add record"""
         db = self.bot.db
@@ -212,7 +212,7 @@ class Service(commands.Cog):
             await ctx.message.channel.send("Failed to add new record, fren :(")
         
     @db.command(name="edit")
-    @checks.is_access_allowed(required_level=3)
+    @checks.is_access_allowed(required_level=9000)
     async def db_edit(self, ctx, table : str, name : str, column : str, value : str):
         """ - Edit record"""
         db = self.bot.db
@@ -225,7 +225,7 @@ class Service(commands.Cog):
             await ctx.message.channel.send("This record has been successfully edited, fren")
 
     @db.command(name="rm")
-    @checks.is_access_allowed(required_level=3)
+    @checks.is_access_allowed(required_level=9000)
     async def db_remove(self, ctx, table : str, name : str):
         """ - Remove record"""
 

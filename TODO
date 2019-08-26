@@ -5,3 +5,5 @@ improve help command
 add logging system
 improve console's output and logging in general
 handle commands not found
+
+write README.md

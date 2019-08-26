@@ -32,7 +32,7 @@ with open('config.json') as data:
     bot.config = json.load(data)
 
 prefixes = commands.when_mentioned_or(bot.config['bot_prefix']) #Set prefix
-bot = commands.Bot(command_prefix=prefixes, description=description, pm_help=None)
+bot = commands.Bot(command_prefix=prefixes, description=description)
 
 with open('config.json') as data:
     bot.config = json.load(data)
@@ -57,7 +57,7 @@ async def on_ready():
     bot.remove_command('help')
     bot.start_time = datetime.utcnow()
 
-    print("{} has started!".format(bot.user.name))
+    print("\n{} has started!\n".format(bot.user.name))
     print("Current time is {}".format(bot.start_time))
 
     cursor = bot.db.cursor()
