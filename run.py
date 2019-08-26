@@ -14,17 +14,25 @@ from datetime import datetime
 from discord.ext import commands
 
 
+""" I COULDN'T FIND A BETTER WAY TO SET PREFIX BY CONFIG.JSON, I'LL FIX LATER"""
+
+
+
 description = """hello frens"""
 dir_path = os.path.dirname(os.path.realpath(__file__)) #Set working directory to bot's folder
 os.chdir(dir_path) #Move to bot's folder
-prefixes = commands.when_mentioned_or('apu ') #Set prefix
-bot = commands.Bot(command_prefix=prefixes, description=description, pm_help=None)
+bot = commands.Bot(command_prefix="owo")
 #client = discord.Client()
-
 
 #Read config
 if not os.path.isfile("config.json"):
     sys.exit("Set up your config.json file.")
+
+with open('config.json') as data:
+    bot.config = json.load(data)
+
+prefixes = commands.when_mentioned_or(bot.config['bot_prefix']) #Set prefix
+bot = commands.Bot(command_prefix=prefixes, description=description, pm_help=None)
 
 with open('config.json') as data:
     bot.config = json.load(data)
@@ -46,6 +54,7 @@ bot.process = psutil.Process()
 
 @bot.event
 async def on_ready():
+    bot.remove_command('help')
     bot.start_time = datetime.utcnow()
 
     print("{} has started!".format(bot.user.name))
@@ -92,8 +101,6 @@ async def on_ready():
         
 
 
-if bot.config['type'] == "user":
-    bot.run(bot.config['user_token'], bot=False)
-else:
-    bot.run(bot.config['token'])
+
+bot.run(bot.config['token'])
 
