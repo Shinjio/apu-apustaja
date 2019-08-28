@@ -1,3 +1,8 @@
+reset skip on new song
+purge on Mod cogs
+fix music loop
+add level system
+add nsfw
 add a feedback command
 improve algebra function
 add feedback function
