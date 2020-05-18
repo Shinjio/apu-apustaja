@@ -6,6 +6,7 @@
   - Add nsfw
   - Improve algebra function
   - Add logging system
+  - HackTheBox and CTFs features!
 
 - @Sciota:
   - Add roles handling

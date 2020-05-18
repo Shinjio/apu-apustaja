@@ -93,11 +93,11 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name='Hello frens | apu help'))
 
     #Send a random message from copypasta.copypasta to my friends'
-    while True:
-        channel = bot.get_channel(544990818562342922)
-        delay = random.randint(60, 3600)
-        await asyncio.sleep(delay)
-        await channel.send(random.choice(copypasta.copypasta))
+    #while True:
+    #    channel = bot.get_channel(544990818562342922)
+#        delay = random.randint(60, 3600)
+ #       await asyncio.sleep(delay)
+  #      await channel.send(random.choice(copypasta.copypasta))
         
 
 

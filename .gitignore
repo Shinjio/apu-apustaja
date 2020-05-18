@@ -2,4 +2,6 @@ config.json
 requirements.txt
 guild_archives/
 Procfile
+board.png
+board.svg
 main.db
