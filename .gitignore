@@ -6,5 +6,9 @@ board.png
 board.svg
 main.db
 chesstest/
+__pycache__/
+*.pyc
+.gitignore.swp
+backupai.py
 gamebook/games.bin
 
