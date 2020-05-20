@@ -1,4 +1,4 @@
-import threading
+import multiprocessing
 import chess
 import chess.svg
 from chess.polyglot import open_reader
@@ -95,7 +95,9 @@ class Chess(commands.Cog):
                         self.swapTurns()
                         await ctx.message.channel.send(file=discord.File("board.png"))
                     else:
-                        print("Thinking...")
+                        print("\n I am thinking...\n")
+                        pool = multiprocessing.Pool()
+                        #move = pool.map(chessai.alphaBetaRoot(3,self.board,True), range(23))
                         move = chessai.alphaBetaRoot(3,self.board,True)
                         move = chess.Move.from_uci(str(move))
                         self.board.push(move)
